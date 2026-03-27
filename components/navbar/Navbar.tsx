@@ -59,7 +59,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-gray-900 text-white shadow-lg z-50">
+    <nav className="fixed top-0 left-0 w-full text-white bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16"> {/* Changed justify-center to justify-between */}
           {/* Left side (e.g., Logo/Brand) - Adjust as needed */}
@@ -72,19 +72,19 @@ export default function Navbar() {
           {/* Center (Navigation Links) */}
           <div className="flex-grow flex justify-center"> {/* flex-grow to take available space */}
             <div className="flex space-x-4">
-              <Link href="/" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>
+              <Link href="/" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/' ? 'bg-pink-500' : 'hover:bg-pink-500'}`}>
                 <TrendingUpLogoSvg className="h-6 w-4 mr-2" /> Dashboard
               </Link>
-              <Link href="/sales-pipeline" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/sales-pipeline' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>
+              <Link href="/sales-pipeline" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/sales-pipeline' ? 'bg-pink-500' : 'hover:bg-pink-500'}`}>
                 <BookOpenLogoSvg className="h-6 w-6 mr-2" /> Sales Pipeline
               </Link>
-              <Link href="/product" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/product' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>
+              <Link href="/product" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/product' ? 'bg-pink-500' : 'hover:bg-pink-500'}`}>
                 <ProductLogoSvg className="h-4 w-4 mr-2" />Product
               </Link>
-              <Link href="/booking-list" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/booking-list' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>
+              <Link href="/booking-list" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/booking-list' ? 'bg-pink-500' : 'hover:bg-pink-500'}`}>
                 <BookOpenLogoSvg className="h-6 w-6 mr-2" /> Booking List
               </Link>
-              <Link href="/report" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/report' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>
+              <Link href="/report" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/report' ? 'bg-pink-500' : 'hover:bg-pink-500'}`}>
                 <FileBarLogoSvg className="h-6 w-6 mr-2" /> Report
               </Link>
             </div>
@@ -95,7 +95,7 @@ export default function Navbar() {
             {user.isAuthenticated ? (
               <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                 <span className="text-sm font-medium hidden md:block">{user.username}</span> {/* Hide username on small screens */}
-                <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center border-2 border-gray-600">
+                <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center border-2 border-gray-600">
                   <FaUserCircle className="text-xl text-gray-300" />
                 </div>
               </div>
@@ -110,14 +110,14 @@ export default function Navbar() {
                 {user.isAdmin && ( // Only show "Admin Area" if user is admin
                   <button
                     onClick={handleAdminArea}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-200 hover:bg-gray-700"
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-200 hover:bg-pink-500"
                   >
                     <FaCog className="mr-2" /> Admin Area
                   </button>
                 )}
                 <button
                   onClick={handleLogout}
-                  className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-700"
+                  className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-pink-500"
                 >
                   <FaSignOutAlt className="mr-2" /> Logout
                 </button>
