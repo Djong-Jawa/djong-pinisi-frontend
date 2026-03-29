@@ -23,6 +23,12 @@ ENV NODE_ENV=production \
     HOSTNAME=0.0.0.0 \
     PORT=3000
 
+# Strip npm/corepack — not needed since we run `node server.js` directly (~20 MB saved)
+RUN npm uninstall -g npm corepack 2>/dev/null || true \
+  && rm -rf /usr/local/lib/node_modules/npm \
+             /usr/local/lib/node_modules/corepack \
+  && find /usr/local/bin -name "npm*" -o -name "npx*" -o -name "corepack*" | xargs rm -f || true
+
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs \
   && adduser -S nextjs -u 1001

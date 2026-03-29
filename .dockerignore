@@ -1,0 +1,24 @@
+# Dependencies (installed fresh inside builder)
+node_modules
+
+# Next.js build output (generated inside builder)
+.next
+
+# Dev/local files
+.env*.local
+.env.development
+
+# Version control
+.git
+.gitignore
+
+# Editor / OS
+.DS_Store
+.vscode
+*.swp
+*.swo
+
+# Docs / misc
+README.md
+*.md
+CHANGELOG*
