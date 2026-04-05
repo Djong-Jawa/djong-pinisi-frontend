@@ -4,6 +4,10 @@ const withFlowbiteReact = require("flowbite-react/plugin/nextjs");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  // Dynamic basePath from environment variable
+  // Set to empty string for root deployment, or '/your-path' for subdirectory
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>
