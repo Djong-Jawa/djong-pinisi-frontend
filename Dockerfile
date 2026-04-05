@@ -1,6 +1,12 @@
 # ── Build stage ────────────────────────────────────────────────────────────────
 FROM node:22.22.0-alpine AS builder
 
+# Accept build argument for base path
+ARG NEXT_PUBLIC_BASE_PATH="/djong-pinisi"
+
+# Set as environment variable for Next.js build
+ENV NEXT_PUBLIC_BASE_PATH=$NEXT_PUBLIC_BASE_PATH
+
 RUN apk add --no-cache g++ make py3-pip libc6-compat
 
 WORKDIR /app
