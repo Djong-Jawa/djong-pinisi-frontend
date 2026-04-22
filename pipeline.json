@@ -1,0 +1,12 @@
+{
+    "appName": "djong-pinisi-frontend",
+    "sonarExcludePath": "ns-cicd/*,node_modules/*,.next/*,Dockerfile",
+    "is_unit_test": "yes",
+    "language": "nextjs",
+    "testPackages": "./graphqlutils/... ./graph/model/...",
+    "sonarCoverageInclusions": "graphqlutils/**/*.go,graph/model/**/*.go",
+    "sonarTestInclusions": "graphqlutils/**/*_test.go,graph/model/**/*_test.go",
+    "enableSCA": "true",
+    "enableSCAHardGate": "false",
+    "needEnvFile": "no"
+}
