@@ -7,6 +7,11 @@ const nextConfig = {
   // Dynamic basePath from environment variable
   // Set to empty string for root deployment, or '/your-path' for subdirectory
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH+"/" || '/',
+
+  // Only export static in production, allow server in dev for API routes
+  ...(process.env.NODE_ENV === 'production' && { output: 'export' }),
   
   webpack(config) {
     // Grab the existing rule that handles SVG imports

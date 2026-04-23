@@ -72,7 +72,7 @@ export default function Navbar() {
           {/* Center (Navigation Links) */}
           <div className="flex-grow flex justify-center"> {/* flex-grow to take available space */}
             <div className="flex space-x-4">
-              <Link href="/" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/' ? 'bg-pink-500' : 'hover:bg-pink-500'}`}>
+              <Link href="/dashboard" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/' ? 'bg-pink-500' : 'hover:bg-pink-500'}`}>
                 <TrendingUpLogoSvg className="h-6 w-4 mr-2" /> Dashboard
               </Link>
               <Link href="/sales-pipeline" className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${pathname === '/sales-pipeline' ? 'bg-pink-500' : 'hover:bg-pink-500'}`}>
