@@ -9,9 +9,6 @@ const nextConfig = {
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
 
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH+"/" || '/',
-
-  // Only export static in production, allow server in dev for API routes
-  ...(process.env.NODE_ENV === 'production' && { output: 'export' }),
   
   webpack(config) {
     // Grab the existing rule that handles SVG imports
