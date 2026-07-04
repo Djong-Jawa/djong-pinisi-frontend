@@ -4,10 +4,13 @@
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import ProductLogoSvg from '../../public/assets/navbar/product-box.svg'; 
 import TrendingUpLogoSvg from '../../public/assets/navbar/trending-up.svg';
 import BookOpenLogoSvg from '../../public/assets/navbar/book-open-check.svg';
 import FileBarLogoSvg from '../../public/assets/navbar/file-bar-chart.svg';
+import { logout, isAuthenticated } from '@/lib-api/auth';
+import { clearAuthData } from '@/store/features/auth/authSlice';
 
 // You might need to install react-icons:
 // npm install react-icons
@@ -18,14 +21,21 @@ import { FaUserCircle, FaSignOutAlt, FaCog } from 'react-icons/fa'; // Example i
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
+  const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null); // Ref for detecting clicks outside
+
+  // Check authentication status on mount and pathname change
+  useEffect(() => {
+    setIsAuth(isAuthenticated());
+  }, [pathname]);
 
   // Dummy user data - In a real app, this would come from authentication context/state
   const user = {
-    isAuthenticated: true,
-    username: 'Rizki Sadewa - Admin', // Replace with dynamic username
-    isAdmin: true, // Replace with dynamic admin status
+    isAuthenticated: isAuth,
+    username: 'Rizki Sadewa - Admin', // Replace with dynamic username from token/API
+    isAdmin: true, // Replace with dynamic admin status from token/API
   };
 
   // Effect to handle clicks outside the dropdown
@@ -44,12 +54,12 @@ export default function Navbar() {
     };
   }, [dropdownRef]); // Only re-run if dropdownRef changes (which it won't)
 
-
   const handleLogout = () => {
-    // Implement your logout logic here
-    console.log('Logging out...');
-    setIsDropdownOpen(false); // Close dropdown after action
-    // Redirect to login page or update auth state
+    // Clear Redux auth state
+    dispatch(clearAuthData());
+    // Call the logout function which removes token and redirects to login
+    logout();
+    setIsDropdownOpen(false);
   };
 
   const handleAdminArea = () => {

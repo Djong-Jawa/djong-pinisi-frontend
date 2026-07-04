@@ -2,49 +2,58 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { FaGoogle, FaGithub } from 'react-icons/fa'; // Import icons
+import { useDispatch } from 'react-redux';
+import { login, setAuthToken } from '@/lib-api/auth';
+import { setAuthData } from '@/store/features/auth/authSlice';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const dispatch = useDispatch();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
-    // --- Replace with your actual authentication logic ---
-    console.log('Attempting login with:', { username, password });
-
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      if (username === 'test' && password === 'password') {
-        console.log('Login successful!');
-        // Redirect or set auth state
-        alert('Login successful!'); // For demonstration
-      } else {
-        setError('Invalid username or password.');
+      // Call the backend authentication API
+      const response = await login({ email, password });
+      
+      // Extract token from response (check multiple possible fields)
+      const token = response.token || response.access_token || response.accessToken;
+      
+      if (!token) {
+        throw new Error('No authentication token received');
       }
+
+      // Store the token in cookie
+      setAuthToken(token);
+      
+      // Update Redux store with auth data
+      dispatch(setAuthData({ 
+        token, 
+        user: response.user || { email }
+      }));
+      
+      console.log('Login successful!');
+      
+      // Redirect to the original page or dashboard
+      const redirectTo = searchParams.get('redirect') || '/dashboard';
+      router.push(redirectTo);
+      
     } catch (err) {
       console.error('Login error:', err);
-      setError('An unexpected error occurred. Please try again.');
+      setError(err instanceof Error ? err.message : 'Invalid email or password. Please try again.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleGoogleLogin = () => {
-    console.log('Initiating Google login...');
-    alert('Google login initiated (dummy)');
-  };
-
-  const handleGithubLogin = () => {
-    console.log('Initiating GitHub login...');
-    alert('GitHub login initiated (dummy)');
   };
 
   return (
@@ -57,26 +66,27 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2"> {/* Darker text */}
-                Username
+              <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+                Email
               </label>
               <input
-                type="text"
-                id="username"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline bg-gray-100 border-gray-300" // Lighter input background and border
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                type="email"
+                id="email"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline bg-gray-100 border-gray-300"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
+                placeholder="your.email@example.com"
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2"> {/* Darker text */}
+              <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
                 Password
               </label>
               <input
                 type="password"
                 id="password"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 mb-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-100 border-gray-300" // Lighter input background and border
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 mb-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-100 border-gray-300"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -96,32 +106,8 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 flex items-center justify-between">
-            <span className="flex-grow border-t border-gray-300"></span> {/* Lighter border */}
-            <span className="flex-shrink mx-4 text-gray-500">OR</span> {/* Gray text */}
-            <span className="flex-grow border-t border-gray-300"></span> {/* Lighter border */}
-          </div>
-
-          <div className="mt-6 space-y-3">
-            <button
-              onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200"
-            >
-              <FaGoogle className="mr-2" /> Login with Google
-            </button>
-            <button
-              onClick={handleGithubLogin}
-              className="w-full flex items-center justify-center bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200"
-            >
-              <FaGithub className="mr-2" /> Login with GitHub
-            </button>
-          </div>
-
-          <p className="text-center text-gray-600 text-sm mt-6"> {/* Darker gray for text */}
-            Don't have an account?{' '}
-            <Link href="/register" className="text-blue-600 hover:text-blue-700 font-bold"> {/* Blue for links */}
-              Register here.
-            </Link>
+          <p className="text-center text-gray-600 text-sm mt-6">
+            Protected by Djong Pinisi Authentication
           </p>
         </div>
       </div>

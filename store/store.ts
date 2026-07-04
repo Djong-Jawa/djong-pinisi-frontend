@@ -5,6 +5,7 @@ import tourPackageReducer from './features/tour-package/tourPackageSlice';
 import bookingReducer from './features/booking-list/bookingListSlice';
 import bookingOperationsReducer from './features/booking-operations/bookingOperationsSlice';
 import bookingNowReducer from './features/booking-now/bookingNowSlice';
+import authReducer from './features/auth/authSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     booking: bookingReducer,
     bookingOperations: bookingOperationsReducer,
     bookingNow: bookingNowReducer,
+    auth: authReducer,
   },
 });
 
