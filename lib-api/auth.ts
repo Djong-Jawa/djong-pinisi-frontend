@@ -1,6 +1,3 @@
-// lib/auth.ts
-import { API_ENDPOINTS, buildApiUrl, DEFAULT_HEADERS } from './api-config';
-
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -34,21 +31,6 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
       body: JSON.stringify(credentials),
     });
 
-    // Handle non-200 responses
-    if (!response.ok) {
-      let errorMessage = 'Login failed';
-      
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorData.error || `Server error: ${response.status}`;
-      } catch {
-        // If response is not JSON
-        errorMessage = `Server error: ${response.status} ${response.statusText}`;
-      }
-      
-      throw new Error(errorMessage);
-    }
-
     return await response.json();
   } catch (error) {
     // Handle network errors
@@ -74,7 +56,7 @@ export function setAuthToken(token: string) {
  * Get authentication token from cookie
  */
 export function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof globalThis.window === 'undefined') return null;
   
   const cookies = document.cookie.split(';');
   for (const cookie of cookies) {
@@ -105,7 +87,7 @@ export function isAuthenticated(): boolean {
  */
 export function logout() {
   removeAuthToken();
-  if (typeof window !== 'undefined') {
+  if (typeof globalThis.window !== 'undefined') {
     window.location.href = process.env.NEXT_PUBLIC_BASE_PATH+'/login';
   }
 }

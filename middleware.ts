@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Define public routes that don't require authentication
-const publicRoutes = ['/login'];
+const publicRoutes = new Set(['/login']);
 
 // Define paths that should be accessible without auth (like static assets, API routes for login, etc.)
 const publicPaths = ['/api/auth/login', '/api', '/_next', '/favicon.ico', '/public'];
@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
   
   // Check if the path is public
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
-  const isPublicRoute = publicRoutes.includes(pathname);
+  const isPublicRoute = publicRoutes.has(pathname);
   
   // Allow access to public paths and routes
   if (isPublicPath || isPublicRoute) {

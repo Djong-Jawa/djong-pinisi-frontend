@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { login, setAuthToken } from '@/lib-api/auth';
 import { setAuthData } from '@/store/features/auth/authSlice';
