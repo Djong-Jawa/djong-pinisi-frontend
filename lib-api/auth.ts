@@ -88,6 +88,6 @@ export function isAuthenticated(): boolean {
 export function logout() {
   removeAuthToken();
   if (typeof globalThis.window !== 'undefined') {
-    window.location.href = process.env.NEXT_PUBLIC_BASE_PATH+'/login';
+    globalThis.window.location.href = process.env.NEXT_PUBLIC_BASE_PATH+'/login';
   }
 }
