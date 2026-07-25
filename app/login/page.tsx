@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { login, setAuthToken } from '@/lib-api/auth';
 import { setAuthData } from '@/store/features/auth/authSlice';
+import GeneralNotification from '@/components/notifications/GeneralNotification';
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>('');
@@ -15,6 +16,15 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
+  const [showNotification, setShowNotification] = useState(false);
+  const [notifConfig, setNotifConfig] = useState<{ message: string; type: "success" | "error" | "info" }>({
+    message: "",
+    type: "success",
+  });
+  const triggerNotification = (message: string, type: "success" | "error" | "info") => {
+    setNotifConfig({ message, type });
+    setShowNotification(true);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,23 +39,25 @@ export default function LoginPage() {
       const token = response.token || response.access_token || response.accessToken;
       
       if (!token) {
-        throw new Error('No authentication token received');
-      }
+        console.log("error login : "+response)
+        triggerNotification(response.message, "error")
+      } else {
 
-      // Store the token in cookie
-      setAuthToken(token);
-      
-      // Update Redux store with auth data
-      dispatch(setAuthData({ 
-        token, 
-        user: response.user || { email }
-      }));
-      
-      console.log('Login successful!');
-      
-      // Redirect to the original page or dashboard
-      const redirectTo = searchParams.get('redirect') || '/dashboard';
-      router.push(redirectTo);
+        // Store the token in cookie
+        setAuthToken(token);
+        
+        // Update Redux store with auth data
+        dispatch(setAuthData({ 
+          token, 
+          user: response.user || { email }
+        }));
+        
+        console.log('Login successful!');
+        
+        // Redirect to the original page or dashboard
+        const redirectTo = searchParams.get('redirect') || '/dashboard';
+        router.push(redirectTo);
+      }
       
     } catch (err) {
       console.error('Login error:', err);
@@ -110,6 +122,15 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
+
+      {/* Notification */}
+      {showNotification && (
+        <GeneralNotification
+          message={notifConfig.message}
+          type={notifConfig.type}
+          onClose={() => setShowNotification(false)}
+        />
+      )}
 
       {/* Right Half: Background Video */}
       <div className="hidden lg:flex w-1/2 relative overflow-hidden items-center justify-center"> {/* Hidden on small screens, flex on large */}

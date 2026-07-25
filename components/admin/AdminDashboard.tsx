@@ -6,7 +6,6 @@ import { RootState } from '@/store/store';
 import TourPackageList from './TourPackageList';
 import TourPackageForm from './TourPackageForm';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
-import Dashboard from '@/components/dashboard/Dashboard';
 
 type TabType = 'overview' | 'packages';
 

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { SalesPipelineCardProps } from '../../../components/sales-pipeline/SalesPipelineCard';
+import { SalesPipelineCardProps } from '../../../_components/sales-pipeline/SalesPipelineCard';
 
 interface SalesPipelineState {
   searchQuery: string;
