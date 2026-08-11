@@ -19,6 +19,12 @@ interface SalesPipelineState {
   // Modal State
   isInputModalOpen: boolean;
   isModalInputLoading: boolean;
+  
+  // API State
+  isLoading: boolean;
+  error: string | null;
+  endCursor: string | null;
+  hasNextPage: boolean;
 }
 
 const sampleData: SalesPipelineCardProps['lead'][] = [
@@ -197,10 +203,14 @@ const initialState: SalesPipelineState = {
   leadpaxname: '',
   leadPIC: '',
   leadStage: 'Initial Contact',
-  salesData: sampleData,
-  filteredAndSortedData: sampleData,
-  paginatedData: sampleData.slice(0, 5),
-  itemsPerPage: 5
+  salesData: [],
+  filteredAndSortedData: [],
+  paginatedData: [],
+  itemsPerPage: 10,
+  isLoading: false,
+  error: null,
+  endCursor: null,
+  hasNextPage: false
 };
 
 const salesPipelineSlice = createSlice({
@@ -269,6 +279,29 @@ const salesPipelineSlice = createSlice({
     setIsModalInputLoading: (state, action: PayloadAction<boolean>) => {
       state.isModalInputLoading = action.payload;
     },
+    
+    // API Actions
+    setIsLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    
+    setError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
+    },
+    
+    setSalesData: (state, action: PayloadAction<{
+      data: SalesPipelineCardProps['lead'][];
+      endCursor: string | null;
+      hasNextPage: boolean;
+    }>) => {
+      state.salesData = action.payload.data;
+      state.endCursor = action.payload.endCursor;
+      state.hasNextPage = action.payload.hasNextPage;
+      state.isLoading = false;
+      state.error = null;
+      updateFilteredAndSortedData(state);
+      updatePaginatedData(state);
+    },
   }
 });
 
@@ -321,6 +354,9 @@ export const {
   setLeadPIC,
   setLeadStage,
   setIsModalInputLoading,
+  setIsLoading,
+  setError,
+  setSalesData,
 } = salesPipelineSlice.actions;
 
 export default salesPipelineSlice.reducer;

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import AdminDashboard from '../../_components/admin/AdminDashboard';
+import AdminDashboard from '../../components/admin/AdminDashboard';
 
 export default function AdminAreaPage() {
   return (

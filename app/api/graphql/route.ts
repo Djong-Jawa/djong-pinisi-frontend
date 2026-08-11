@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { PUBLIC_KEY } from '@/lib-api/api-config';
+
+// GraphQL endpoint
+const GRAPHQL_ENDPOINT = 'https://djongjawa.com/v1.0.0/query';
 
 // Mock suggestions data
 const mockSuggestions = [
@@ -19,7 +23,29 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { query, variables } = body;
 
-        // Simple mock GraphQL resolver
+        // Proxy SalesPipelines query to external GraphQL API
+        if (query.includes('SalesPipelines')) {
+            const response = await fetch(GRAPHQL_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'publicKey': PUBLIC_KEY,
+                },
+                body: JSON.stringify({ query, variables }),
+            });
+
+            if (!response.ok) {
+                return NextResponse.json(
+                    { errors: [{ message: `HTTP error! status: ${response.status}` }] },
+                    { status: response.status }
+                );
+            }
+
+            const result = await response.json();
+            return NextResponse.json(result);
+        }
+
+        // Simple mock GraphQL resolver for suggestions
         if (query.includes('GetSuggestions')) {
             const searchQuery = variables?.query?.toLowerCase() || '';
             
