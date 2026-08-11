@@ -44,8 +44,8 @@ export async function loadSalesPipeline(
     const API_ROUTE = `${basePath}/api/graphql`;
     
     const query = `
-      query SalesPipelines($first: Int!, $after: String, $orderBy: SalesPipelineOrder) {
-        salesPipelines(first: $first, after: $after, orderBy: $orderBy) {
+      query SalesPipelines {
+        salesPipelines(first: 10, after: "1", orderBy: { createdAt: ASC }) {
           edges {
             cursor
             node {
@@ -69,11 +69,15 @@ export async function loadSalesPipeline(
       }
     `;
 
-    const variables = {
+    const variables: any = {
       first,
-      after: after || null,
       orderBy: { createdAt: 'ASC' }
     };
+    
+    // Only include 'after' if it has a value
+    if (after) {
+      variables.after = after;
+    }
 
     const response = await fetch(API_ROUTE, {
       method: 'POST',
@@ -86,18 +90,14 @@ export async function loadSalesPipeline(
       }),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    // Check if response is JSON
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      const text = await response.text();
-      throw new Error(`Expected JSON response but received: ${contentType}. Response: ${text.substring(0, 200)}`);
-    }
-
+    // Always try to parse the JSON response first
     const result: SalesPipelinesResponse = await response.json();
+    
+    if (!response.ok) {
+      console.error('API error response:', result);
+      const errorMessage = result.errors?.[0]?.message || `HTTP error! status: ${response.status}`;
+      throw new Error(errorMessage);
+    }
     
     if (result.errors) {
       throw new Error(result.errors[0]?.message || 'GraphQL error occurred');

@@ -25,6 +25,8 @@ export async function POST(req: NextRequest) {
 
         // Proxy SalesPipelines query to external GraphQL API
         if (query.includes('SalesPipelines')) {
+            console.log('Proxying GraphQL request:', { query, variables });
+            
             const response = await fetch(GRAPHQL_ENDPOINT, {
                 method: 'POST',
                 headers: {
@@ -34,14 +36,14 @@ export async function POST(req: NextRequest) {
                 body: JSON.stringify({ query, variables }),
             });
 
+            const result = await response.json();
+            console.log('GraphQL response:', { status: response.status, result });
+
             if (!response.ok) {
-                return NextResponse.json(
-                    { errors: [{ message: `HTTP error! status: ${response.status}` }] },
-                    { status: response.status }
-                );
+                // Return the actual error from the GraphQL API
+                return NextResponse.json(result, { status: response.status });
             }
 
-            const result = await response.json();
             return NextResponse.json(result);
         }
 
