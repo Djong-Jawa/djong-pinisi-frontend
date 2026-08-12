@@ -56,7 +56,10 @@ const SalesPipelineCard: React.FC<SalesPipelineCardProps> = ({ lead, onClick }) 
           {lead.stage}
         </div>
         <div className="ml-4 text-right">
-          <p className="text-lg font-bold text-gray-800">IDR {lead.value.toLocaleString()}</p>
+          <p className="text-lg font-bold text-gray-800">{Number(lead.value).toLocaleString('id-ID', {
+            style: 'currency',
+            currency: 'IDR'
+          })}</p>
           <p className="text-xs text-gray-500">Est. Close: {gf.formatDateTime(new Date(lead.closeDate))}</p>
         </div>
       </div>
