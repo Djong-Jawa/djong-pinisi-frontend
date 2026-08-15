@@ -41,6 +41,7 @@ const SalesPipelineList: React.FC = () => {
     error
   } = useSelector((state: RootState) => state.salesPipeline);
 
+  // const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage);
   const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage);
 
   // Fetch sales pipeline data on component mount
